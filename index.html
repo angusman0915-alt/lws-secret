@@ -1,0 +1,169 @@
+html<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚠️ WARNING: SYSTEM COMPROMISED ⚠️</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: 'Courier New', Courier, monospace; }
+        canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.4; }
+        
+        /* 偽裝起始畫面 */
+        #start-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; z-index: 100; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: #00ff00; padding: 20px;
+        }
+        .scan-line { width: 80%; height: 4px; background: #00ff00; box-shadow: 0 0 10px #00ff00; animation: move 2s infinite linear; }
+        @keyframes move { 0% { transform: translateY(-100px); } 100% { transform: translateY(100px); } }
+        .btn {
+            padding: 15px 40px; background: transparent; color: #00ff00; border: 2px solid #00ff00;
+            font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 30px; letter-spacing: 2px;
+            box-shadow: 0 0 10px rgba(0,255,0,0.3);
+        }
+        .btn:hover { background: #00ff00; color: #000; }
+
+        /* 勒索軟體警告大框 */
+        #ransom-box {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(20, 0, 0, 0.95); border: 3px solid #ff0000; color: #ff3333;
+            padding: 30px; text-align: center; box-shadow: 0 0 40px #ff0000;
+            z-index: 10; width: 90%; max-width: 400px; border-radius: 5px; display: none;
+        }
+        .timer { font-size: 32px; font-weight: bold; color: #fff; text-shadow: 0 0 10px #ff0000; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <!-- 偽裝成「系統安全檢查」 -->
+    <div id="start-overlay">
+        <div class="scan-line"></div>
+        <h2 style="letter-spacing: 3px; text-align: center;">[ SYSTEM SECURITY SCANNER ]</h2>
+        <p style="margin-top: 15px; color: #888; text-align: center;">偵測到異常雲端存取，請點擊下方按鈕進行安全驗證。</p>
+        <button class="btn" onclick="triggerUltimatePrank()">START VERIFICATION</button>
+    </div>
+
+    <!-- 終極整蠱勒索畫面 -->
+    <div id="ransom-box">
+        <h2 style="letter-spacing: 1px; background: #ff0000; color: #000; padding: 5px; font-weight: bold;">YOUR DEVICE HAS BEEN LOCKED</h2>
+        <p style="margin-top: 20px; text-align: left; color: #fff; font-size: 13px; line-height: 1.6;">
+            [!] 偵測到非法下載行為。<br>
+            [!] 本機所有照片、通訊錄及私密檔案已完成加密。<br>
+            [!] 系統檔案刪除倒數計時已啟動：
+        </p>
+        
+        <!-- 逼真的倒數計時器 -->
+        <div class="timer" id="timer">00:04:59</div>
+        
+        <p id="status-text" style="color: #ffaa00; font-size: 14px; min-height: 40px;">正在包裝隱私數據並上傳至伺服器...</p>
+    </div>
+
+    <!-- 背景暗色紅色數位雨 -->
+    <canvas id="matrix"></canvas>
+
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        const ransomBox = document.getElementById('ransom-box');
+        const overlay = document.getElementById('start-overlay');
+        const timerElement = document.getElementById('timer');
+        const statusText = document.getElementById('status-text');
+
+        // 紅色駭客數位雨
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const chars = '0123456789☠☣✖⚡ERR$'.split('');
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const rainDrops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff0000'; // 改為更具威脅感的紅色數位雨
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        }
+
+        function triggerUltimatePrank() {
+            overlay.style.display = 'none';
+            ransomBox.style.display = 'block';
+
+            // 1. 強制全螢幕 (隱藏瀏覽器網址列，最像中毒)
+            const docElm = document.documentElement;
+            if (docElm.requestFullscreen) docElm.requestFullscreen();
+            else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();
+
+            // 2. Android 瞬間短暫狂震（模擬系統崩潰警報）
+            if (navigator.vibrate) {
+                setInterval(() => {
+                    navigator.vibrate([200, 100, 200, 100, 500]);
+                }, 2000);
+            }
+
+            // 3. 啟動紅色數位雨
+            setInterval(drawMatrix, 35);
+
+            // 4. 偽裝狀態文字輪播（增加恐慌感）
+            const scripts = [
+                "正在獲取本機 IP 位址...",
+                "正在複製相簿資料夾 (DCIM)...",
+                "正在傳送通訊錄至遠端伺服器...",
+                "正在寫入加密金鑰...",
+                "警告：請勿嘗試關閉此網頁，否則將立刻鎖定硬體！"
+            ];
+            let step = 0;
+            const textInterval = setInterval(() => {
+                if (step < scripts.length) {
+                    statusText.innerText = scripts[step];
+                    step++;
+                } else {
+                    clearInterval(textInterval);
+                    // 最終反轉爆點
+                    setTimeout(() => {
+                        triggerEnding();
+                    }, 3000);
+                }
+            }, 3000);
+
+            // 5. 倒數計時器
+            let totalSeconds = 300;
+            setInterval(() => {
+                totalSeconds--;
+                if(totalSeconds < 0) totalSeconds = 0;
+                let mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+                let secs = (totalSeconds % 60).toString().padStart(2, '0');
+                timerElement.innerText = `00:${mins}:${secs}`;
+            }, 1000);
+        }
+
+        // 終極大反轉結局
+        function triggerEnding() {
+            // 連續彈窗轟炸
+            alert("🚨 偵測到重大違規行為！");
+            alert("FBI 聯邦調查局已鎖定您的 IP！");
+            alert("哈哈哈哈騙你的啦！🤣🤣🤣");
+            alert("看你被嚇成那樣！這只是個無害的網頁啦～");
+            alert("點擊確認後即可正常關閉網頁 👍");
+            
+            // 釋放全螢幕，讓朋友可以關閉
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            window.onbeforeunload = null; 
+            location.reload(); // 重整回復正常
+        }
+
+        // 阻止返回鍵
+        window.onbeforeunload = function() { return "警告：離開此頁面將導致硬碟立刻格式化！"; };
+    </script>
+</body>
+</html>
